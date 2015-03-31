@@ -856,14 +856,16 @@ class Translator(nodes.NodeVisitor):
     depart_note = depart_admonition
 
     def indent(self, by=0.5):
-        # if we are in a section ".SH" there already is a .RS
-        step = self._indent[-1]
-        self._indent.append(by)
-        self.body.append(self.defs['indent'][0] % step)
+        if len(self._indent):
+            # if we are in a section ".SH" there already is a .RS
+            step = self._indent[-1]
+            self._indent.append(by)
+            self.body.append(self.defs['indent'][0] % step)
 
     def dedent(self):
-        self._indent.pop()
-        self.body.append(self.defs['indent'][1])
+        if len(self._indent):
+            self._indent.pop()
+            self.body.append(self.defs['indent'][1])
 
     def visit_option_list(self, node):
         self.indent(OPTION_LIST_INDENT)
